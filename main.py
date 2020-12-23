@@ -117,9 +117,11 @@ if __name__ == "__main__":
     # testing three different algorithms
     dict_models = {}
     
+    
+    
+    dict_models[SVC(class_weight='balanced')] = {'C': [0.1, 1, 10]}
     dict_models[RandomForestClassifier(class_weight='balanced')] = {'n_estimators': range(50,100)}
     dict_models[KNeighborsClassifier()] = {'n_neighbors': range(5,15), 'weights': ['uniform', 'distance']}
-    dict_models[SVC(class_weight='balanced')] = {'C': [0.1, 1, 10]}
     # storing cross validation scores in order to choose the best model
     dict_score = {'f1_score':{}}
     for model, grid in dict_models.items():
@@ -133,12 +135,15 @@ if __name__ == "__main__":
             score_ = round(pipe['gsCV'].best_score_,2)
             dict_score['f1_score'][type(model).__name__] = score_
     
+    #initiate the output dataFrame
     y_out = pd.DataFrame({'INDEX':X_test.index,'p_target':np.zeros(len(X_test.index))})
-    # prediction using the best performing model, we use the last one in the dict
+    # prediction using the best performing model, we use the SVC here which is the last fitted model in the dict
     y_out['p_target'] = pipe.predict(X_test)
     y_out = y_out.set_index('INDEX')
+    #print results
     print(pd.DataFrame(dict_score))
     print(type(model).__name__ + ' f1 s score on test set: ', round(pipe.score(X_test,y_test),2))
+    #write to csv
     y_out.to_csv(data_path + '/PREDICTED_FLAG.csv')
     
     
