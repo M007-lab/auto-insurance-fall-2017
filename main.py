@@ -119,9 +119,10 @@ if __name__ == "__main__":
     
     
     
-    dict_models[SVC(class_weight='balanced')] = {'C': [0.1, 1, 10]}
+    
     dict_models[RandomForestClassifier(class_weight='balanced')] = {'n_estimators': range(50,100)}
     dict_models[KNeighborsClassifier()] = {'n_neighbors': range(5,15), 'weights': ['uniform', 'distance']}
+    dict_models[SVC(class_weight='balanced')] = {'C': [0.1, 1, 10]}
     # storing cross validation scores in order to choose the best model
     dict_score = {'f1_score':{}}
     for model, grid in dict_models.items():
